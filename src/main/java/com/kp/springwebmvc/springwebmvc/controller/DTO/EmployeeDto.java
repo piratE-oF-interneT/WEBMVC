@@ -37,7 +37,7 @@ public class EmployeeDto {
 	
 //	@Min(value = 20)
 //	@Max(value = 80)
-	@PrimeAgeInterface
+	@PrimeAgeInterface // ---> custom validation
 	private Integer age;
 	@PastOrPresent(message = "enter valid date")
 	private LocalDate dateOfJoining;
@@ -45,7 +45,7 @@ public class EmployeeDto {
 	private Boolean isActive;
 	
 //	@Pattern(regexp = "^(USER|ADMIN)", message="enter valid role")
-	@EmployeeRoleValidation
+	@EmployeeRoleValidation //--> custom validation
 	private String role;
 	
 	public EmployeeDto(Long id, @NotBlank String name, @Email String email, @Min(20) @Max(80) Integer age,
