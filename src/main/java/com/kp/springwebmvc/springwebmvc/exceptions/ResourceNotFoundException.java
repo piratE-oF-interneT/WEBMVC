@@ -1,4 +1,4 @@
-package com.kp.springwebmvc.springwebmvc.advices;
+package com.kp.springwebmvc.springwebmvc.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException{
 
