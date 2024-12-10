@@ -13,6 +13,7 @@ import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.annotation.JacksonInject.Value;
+import com.kp.springwebmvc.springwebmvc.advices.ResourceNotFoundException;
 import com.kp.springwebmvc.springwebmvc.controller.DTO.EmployeeDto;
 import com.kp.springwebmvc.springwebmvc.entity.EmployeeEntity;
 import com.kp.springwebmvc.springwebmvc.repository.EmpLoyeeRepository;
@@ -83,7 +84,7 @@ public class EmployeeService {
 		// TODO Auto-generated method stub
 		
 		if (!empLoyeeRepository.existsById(id)) {
-			return null;
+			throw new ResourceNotFoundException("not found at partial service layer");
 		}
 		
 		EmployeeEntity entity = empLoyeeRepository.findById(id).orElse(null);

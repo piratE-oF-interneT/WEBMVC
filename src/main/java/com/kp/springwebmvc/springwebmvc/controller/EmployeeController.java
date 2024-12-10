@@ -3,6 +3,7 @@ package com.kp.springwebmvc.springwebmvc.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.jsf.FacesContextUtils;
 
+import com.kp.springwebmvc.springwebmvc.advices.ResourceNotFoundException;
 import com.kp.springwebmvc.springwebmvc.controller.DTO.EmployeeDto;
 import com.kp.springwebmvc.springwebmvc.entity.EmployeeEntity;
 import com.kp.springwebmvc.springwebmvc.repository.EmpLoyeeRepository;
@@ -15,9 +16,11 @@ import java.nio.MappedByteBuffer;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.apache.catalina.mapper.Mapper;
+import org.apache.coyote.BadRequestException;
 import org.apache.el.parser.AstFalse;
 import org.hibernate.annotations.NotFound;
 import org.modelmapper.ModelMapper;
@@ -25,6 +28,7 @@ import org.modelmapper.internal.bytebuddy.asm.Advice.Return;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,29 +62,40 @@ public class EmployeeController {
 //	using path variable --> mandatory data
 	
 	
+	
+	
 	@GetMapping(path = "/{employeeId}")
 	public ResponseEntity<EmployeeDto> getDto(@PathVariable(name = "employeeId") Long id) {
+		
+		if (id==null) {
+//			return new BadRequestException("id cannot be null");
+		}
 		
 		Optional<EmployeeDto> employeeDto= service.getById(id);
 		
 		return employeeDto
 						.map(employeeDto1 -> ResponseEntity.ok(employeeDto1))
-						.orElse(ResponseEntity.notFound().build());
+						.orElseThrow(()-> new ResourceNotFoundException("hello exception occured is getDto"));
 	}
+//	@ExceptionHandler(NoSuchElementException.class)
+//	public ResponseEntity<String> handleException(NoSuchElementException noSuchElementException){
+//		
+//		return new ResponseEntity<>("element not found", HttpStatus.NOT_FOUND);
+//	}
 	@GetMapping()
 	public ResponseEntity<List<EmployeeDto>> getAllEmployee(@RequestParam(required=false ,name="inputAge") Integer age ,@RequestParam(required = false,name = "sort") Integer sortBy) {
 		return ResponseEntity.ok(service.getAllEmployee());
 	}
 	
 	@PostMapping()
-	public ResponseEntity<EmployeeDto> creatEmployeeDto (@RequestBody @Valid EmployeeDto inputDto) {
+	public ResponseEntity<EmployeeDto> createEmployeeDto (@RequestBody @Valid EmployeeDto inputDto) {
 		//TODO: process POST request
 		EmployeeDto savedEmployeeDto = service.createEmployee(inputDto);
 		return new ResponseEntity<>(savedEmployeeDto,HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/{employeeId}")
-	public ResponseEntity<EmployeeDto> updateEmployeeDto(@PathVariable(name = "employeeId") Long id, @RequestBody EmployeeDto dto) {
+	public ResponseEntity<EmployeeDto> updateEmployeeDto(@PathVariable(name = "employeeId") Long id, @RequestBody @Valid EmployeeDto dto) {
 		//TODO: process PUT request
 		
 		
@@ -100,7 +115,7 @@ public class EmployeeController {
 		}
 		
 		
-		return ResponseEntity.notFound().build();
+		throw new ResourceNotFoundException("resource not found in deleteEmployee");
 	}
 	
 	@PatchMapping("/patch/{empid}")
@@ -109,7 +124,8 @@ public class EmployeeController {
 		EmployeeDto employeeDto = service.partialUpdateEntity(id,updates);
 		
 		if (employeeDto==null) {
-			return ResponseEntity.notFound().build();
+			throw new ResourceNotFoundException("resource not found in partialupdate");
+
 		}
 		return ResponseEntity.ok(employeeDto);
 	}

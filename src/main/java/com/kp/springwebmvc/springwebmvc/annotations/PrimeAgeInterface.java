@@ -13,7 +13,7 @@ import jakarta.validation.Payload;
 @Constraint(validatedBy = {AgeValidator.class})
 public @interface PrimeAgeInterface {
 	
-	String message() default "{age must be prime number......}";
+	String message() default "{age must be prime number...... between 25 to 60}";
 
 	Class<?>[] groups() default { };
 
