@@ -3,13 +3,14 @@ package com.kp.springwebmvc.springwebmvc.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.jsf.FacesContextUtils;
 
-import com.kp.springwebmvc.springwebmvc.advices.ResourceNotFoundException;
-import com.kp.springwebmvc.springwebmvc.controller.DTO.EmployeeDto;
+import com.kp.springwebmvc.springwebmvc.exceptions.*;
+import com.kp.springwebmvc.springwebmvc.DTO.EmployeeDto;
 import com.kp.springwebmvc.springwebmvc.entity.EmployeeEntity;
 import com.kp.springwebmvc.springwebmvc.repository.EmpLoyeeRepository;
 import com.kp.springwebmvc.springwebmvc.service.EmployeeService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 
 import java.io.Serial;
 import java.nio.MappedByteBuffer;
@@ -27,6 +28,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.asm.Advice.Return;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +44,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
+@Validated
 @RequestMapping("/employees")
 public class EmployeeController {
 	
@@ -64,12 +67,10 @@ public class EmployeeController {
 	
 	
 	
-	@GetMapping(path = "/{employeeId}")
-	public ResponseEntity<EmployeeDto> getDto(@PathVariable(name = "employeeId") Long id) {
+	@GetMapping(path = "/id")
+	public ResponseEntity<EmployeeDto> getDto(@Positive(message = "id must be positive number...") @RequestParam (required=true , name = "id")  Long id) {
 		
-		if (id==null) {
-//			return new BadRequestException("id cannot be null");
-		}
+		
 		
 		Optional<EmployeeDto> employeeDto= service.getById(id);
 		
@@ -83,7 +84,7 @@ public class EmployeeController {
 //		return new ResponseEntity<>("element not found", HttpStatus.NOT_FOUND);
 //	}
 	@GetMapping()
-	public ResponseEntity<List<EmployeeDto>> getAllEmployee(@RequestParam(required=false ,name="inputAge") Integer age ,@RequestParam(required = false,name = "sort") Integer sortBy) {
+	public ResponseEntity<List<EmployeeDto>> getAllEmployee(@Valid @RequestParam(required=false ,name="inputAge") Integer age ,@RequestParam(required = false,name = "sort") Integer sortBy) {
 		return ResponseEntity.ok(service.getAllEmployee());
 	}
 	
@@ -105,7 +106,7 @@ public class EmployeeController {
 	
 	@DeleteMapping("/{employeeid}")
 	
-	public ResponseEntity<Boolean> deleteEmployee(@PathVariable(name = "employeeid") Long id) {
+	public ResponseEntity<Boolean> deleteEmployee(@PathVariable(name = "employeeid") @Valid Long id) {
 		//TODO: process PUT request
 		
 		boolean gotFound = service.deleteEntity(id);
@@ -119,7 +120,7 @@ public class EmployeeController {
 	}
 	
 	@PatchMapping("/patch/{empid}")
-	public ResponseEntity<EmployeeDto> partialUpdateEmployeeDto(@PathVariable(name = "empid") Long id , @RequestBody Map<String, Object> updates) {
+	public ResponseEntity<EmployeeDto> partialUpdateEmployeeDto(@PathVariable(name = "empid") @Valid Long id , @RequestBody Map<String, Object> updates) {
 		
 		EmployeeDto employeeDto = service.partialUpdateEntity(id,updates);
 		

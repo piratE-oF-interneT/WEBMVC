@@ -1,9 +1,11 @@
-package com.kp.springwebmvc.springwebmvc.controller.DTO;
+package com.kp.springwebmvc.springwebmvc.DTO;
 
 import java.time.LocalDate;
 
 
 import java.util.jar.Attributes.Name;
+
+import org.springframework.format.annotation.NumberFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kp.springwebmvc.springwebmvc.annotations.AgeValidator;
@@ -17,6 +19,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +32,8 @@ import lombok.Setter;
 
 public class EmployeeDto {
 	
-	private Long id;
+	@Positive(message = "id must be positive...")
+    private Long id;
 	@NotBlank(message = "name cannot be empty")
 	private String name;
 	@Email(message = "enter valid email")

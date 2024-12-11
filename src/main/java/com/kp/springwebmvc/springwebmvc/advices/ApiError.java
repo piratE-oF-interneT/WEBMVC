@@ -27,6 +27,10 @@ public class ApiError {
 		this.subError = subError;
 	}
 
+	public ApiError() {
+		super();
+	}
+
 	public String getMessage() {
 		return message;
 	}

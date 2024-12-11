@@ -18,44 +18,44 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class HomeController {
-	
-	@RequestMapping("/home")
-	public String getIndexPage(Model model) {
-		
-		System.out.println("hello home...");
-		model.addAttribute("name","kartik pandey");
-		
-		
-		return new String("index");
-	}
-	
-	@RequestMapping("/about")
-	public String getAboutPage() {
-		return new String("about");
-	}
-	
-	@PostMapping(value = "/login", produces = MediaType.APPLICATION_XML_VALUE)	
-	@ResponseBody
-	public ResponseTransfer responseTransferXMLContent(@RequestBody LoginForm form) {
-		//TODO: process POST request
-		
-		System.out.println(form.getUsername());
-		System.out.println(form.getPassword());
-		
-		return new ResponseTransfer("xml added");
-	}
-	
-	@PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)	
-	@ResponseBody
-	public ResponseTransfer responseTransferJSONContent(@RequestBody LoginForm form) {
-		//TODO: process POST request
-		
-		System.out.println(form.getUsername());
-		System.out.println(form.getPassword());
-		
-		return new ResponseTransfer("json added");
-	}
-	
-	
+//	
+//	@RequestMapping("/home")
+//	public String getIndexPage(Model model) {
+//		
+//		System.out.println("hello home...");
+//		model.addAttribute("name","kartik pandey");
+//		
+//		
+//		return new String("index");
+//	}
+//	
+//	@RequestMapping("/about")
+//	public String getAboutPage() {
+//		return new String("about");
+//	}
+//	
+//	@PostMapping(value = "/login", produces = MediaType.APPLICATION_XML_VALUE)	
+//	@ResponseBody
+//	public ResponseTransfer responseTransferXMLContent(@RequestBody LoginForm form) {
+//		//TODO: process POST request
+//		
+//		System.out.println(form.getUsername());
+//		System.out.println(form.getPassword());
+//		
+//		return new ResponseTransfer("xml added");
+//	}
+//	
+//	@PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)	
+//	@ResponseBody
+//	public ResponseTransfer responseTransferJSONContent(@RequestBody LoginForm form) {
+//		//TODO: process POST request
+//		
+//		System.out.println(form.getUsername());
+//		System.out.println(form.getPassword());
+//		
+//		return new ResponseTransfer("json added");
+//	}
+//	
+//	
 
 }
